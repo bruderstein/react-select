@@ -151,13 +151,8 @@ var Select = React.createClass({
 	},
 
 	componentWillReceiveProps: function(newProps) {
-		if (JSON.stringify(newProps.options) !== JSON.stringify(this.props.options)) {
-			this.setState({
-				options: newProps.options,
-				filteredOptions: this.filterOptions(newProps.options)
-			});
-		}
-		if (newProps.value !== this.state.value) {
+		if (newProps.value !== this.state.value || 
+			JSON.stringify(newProps.options) !== JSON.stringify(this.props.options)) {
 			this.setState(this.getStateFromValue(newProps.value, newProps.options));
 		}
 	},
@@ -219,6 +214,7 @@ var Select = React.createClass({
 			value: values.map(function(v) { return v.value; }).join(this.props.delimiter),
 			values: values,
 			inputValue: '',
+			options: options,
 			filteredOptions: filteredOptions,
 			placeholder: !this.props.multi && values.length ? values[0].label : this.props.placeholder,
 			focusedOption: !this.props.multi && values.length ? values[0] : filteredOptions[0]
