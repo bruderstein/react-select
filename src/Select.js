@@ -396,7 +396,11 @@ var Select = React.createClass({
 			return;
 
 			case 9: // tab
-				if (event.shiftKey || !this.state.isOpen || !this.state.focusedOption) {
+				if (event.shiftKey || !this.state.isOpen ) {
+					return;
+				}
+				if (!this.state.focusedOption) {
+					this.resetValue();
 					return;
 				}
 				this.selectFocusedOption();

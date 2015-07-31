@@ -67,6 +67,11 @@ describe('Select', function() {
 	function typeSearchText(text) {
 		TestUtils.Simulate.change(searchInputNode, { target: { value: text } });
 	}
+	
+	function clickToOpenMenu() {
+		var selectArrow = React.findDOMNode(instance).querySelector('.Select-arrow');
+		TestUtils.Simulate.mouseDown(selectArrow);
+	}
 
 	function getSelectControl(instance) {
 		return React.findDOMNode(instance).querySelector('.Select-control');
@@ -1885,5 +1890,56 @@ describe('Select', function() {
 			expect(React.findDOMNode(instance).querySelectorAll('.Select-option'),
 				'to have length', 0);
 		});
+		
+	});
+	
+	describe('blurring with tab', function () {
+		
+		beforeEach(function () {
+			
+			instance = createControl({
+				options: defaultOptions,
+				value: 'two'
+			});
+			
+			clickToOpenMenu();
+			expect(React.findDOMNode(instance), 'queried for', '.Select-option', 'to have length', 4);
+		});
+		
+		it('closes the menu ', function () {
+			
+			// Tab off the input control
+			TestUtils.Simulate.keyDown(searchInputNode, { keyCode: 9 });
+			expect(React.findDOMNode(instance).querySelectorAll('.Select-option'), 'to have length', 0);
+		});
+		
+		describe('with no results', function ()  {
+			beforeEach(function () {
+
+				typeSearchText('DOES NOT EXIST');
+				// No results text is there
+				expect(React.findDOMNode(instance).querySelectorAll('.Select-noresults'), 'to have length', 1);
+				
+				// Tab off to blur the control
+				TestUtils.Simulate.keyDown(searchInputNode, { keyCode: 9 });
+			});
+			
+			it('closes the menu when there are no search results', function () {
+				
+				expect(React.findDOMNode(instance).querySelectorAll('.Select-noresults'), 'to have length', 0);
+			});
+
+			it('returns the option to the originally selected value', function () {
+				
+				expect(React.findDOMNode(instance).querySelector(DISPLAYED_SELECTION_SELECTOR),
+					'to have text', '222');
+			});
+			
+			it('does not call onChange', function () {
+				
+				expect(onChange, 'was not called');
+			});
+		});
+		
 	});
 });
