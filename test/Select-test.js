@@ -163,6 +163,14 @@ describe('Select', function() {
 			});
 		});
 
+		describe('test', function () {
+
+			it('does something', function () {
+
+				expect(1, 'to equal', 1);
+
+			});
+		});
 
 		it('should assign the given name', function () {
 			var selectInputElement = TestUtils.scryRenderedDOMComponentsWithTag(instance, 'input')[0];
@@ -2503,6 +2511,38 @@ describe('Select', function() {
 
 			clickDocument();
 			expect(React.findDOMNode(instance), 'to contain no elements matching', '.Select-option');
+		});
+	});
+
+	describe('instance methods', function () {
+
+		beforeEach(function () {
+
+			wrapper = createControlWithWrapper({
+				options: defaultOptions
+			});
+		});
+
+		describe('setValue', function () {
+
+			it('updates the displayed value', function () {
+
+				instance.setValue('two');
+				expect(React.findDOMNode(instance), 'queried for first', DISPLAYED_SELECTION_SELECTOR,
+					'to have text', '222');
+			});
+
+			it('does not update the displayed value when called with the current value', function () {
+
+				wrapper.setPropsForChild({
+					value: 'two'
+				});
+				instance.setValue('two');
+				expect(React.findDOMNode(instance), 'queried for first', DISPLAYED_SELECTION_SELECTOR,
+					'to have text', '222');
+
+			});
+
 		});
 	});
 });
